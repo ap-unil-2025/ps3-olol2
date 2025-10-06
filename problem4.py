@@ -31,8 +31,10 @@ def count_words(filename):
         int: Total number of words
     """
     # TODO: Open file and count words
+    with open(filename, "r", encoding = 'utf-8') as f:
+        text = f.read()
     # Hint: Use split() to separate words
-    pass
+    return len(text.split())
 
 
 def count_lines(filename):
@@ -46,8 +48,8 @@ def count_lines(filename):
         int: Total number of lines
     """
     # TODO: Open file and count lines
-    pass
-
+    with open(filename, "r", encoding = 'utf-8') as f:
+        return sum(1 for _ in f)
 
 def count_characters(filename, include_spaces=True):
     """
@@ -62,7 +64,13 @@ def count_characters(filename, include_spaces=True):
     """
     # TODO: Open file and count characters
     # If include_spaces is False, don't count spaces
-    pass
+    with open(filename, "r", encoding="utf-8") as f:
+        text = f.read()
+    if include_spaces:
+        return len(text)
+    # Remove all whitespace characters
+    no_ws = "".join(text.split())
+    return len(no_ws)
 
 
 def find_longest_word(filename):
@@ -77,7 +85,22 @@ def find_longest_word(filename):
     """
     # TODO: Find the longest word
     # Hint: You might need to remove punctuation
-    pass
+    import string
+
+    with open(filename, "r", encoding="utf-8") as f:
+        text = f.read()
+
+    # Remove punctuation, split into words (lower/upper doesn’t matter for length)
+    table = str.maketrans("", "", string.punctuation)
+    words = [w.translate(table) for w in text.split()]
+    # Filter out any empty strings (possible if a token was only punctuation)
+    words = [w for w in words if w]
+
+    if not words:
+        return ""
+
+    # Return the first longest word in case of ties
+    return max(words, key=len)
 
 
 def word_frequency(filename):
@@ -100,6 +123,18 @@ def word_frequency(filename):
     # TODO: Convert to lowercase
     # TODO: Remove punctuation (use string.punctuation)
     # TODO: Count frequency of each word
+
+
+    with open(filename, "r", encoding="utf-8") as f:
+        text = f.read()
+
+    # Normalize: lowercase + remove punctuation
+    table = str.maketrans("", "", string.punctuation)
+    words = [w.translate(table).lower() for w in text.split()]
+    words = [w for w in words if w]  # drop empties
+
+    for w in words:
+        frequency[w] = frequency.get(w, 0) + 1
 
     return frequency
 
